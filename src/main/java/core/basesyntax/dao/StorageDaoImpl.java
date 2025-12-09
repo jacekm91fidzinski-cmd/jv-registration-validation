@@ -1,7 +1,6 @@
 package core.basesyntax.dao;
 
 import core.basesyntax.model.User;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,6 @@ public class StorageDaoImpl implements StorageDao {
         return null;
     }
 
-    // helper methods used in tests (not part of interface)
     public void clear() {
         people.clear();
         index = 0L;

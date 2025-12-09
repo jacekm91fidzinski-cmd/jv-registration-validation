@@ -4,10 +4,6 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
-/**
- * Registration service validates user data and registers user using StorageDao.
- * It throws RegistrationException on invalid data.
- */
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
@@ -15,16 +11,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final StorageDao storageDao;
 
-    /**
-     * Default constructor which uses the default StorageDaoImpl.
-     */
     public RegistrationServiceImpl() {
         this(new StorageDaoImpl());
     }
 
-    /**
-     * Constructor with injected storageDao (useful for testing).
-     */
     public RegistrationServiceImpl(StorageDao storageDao) {
         this.storageDao = storageDao;
     }
@@ -49,7 +39,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (login.length() < MIN_LOGIN_LENGTH) {
             throw new RegistrationException(
-                    "Login must be at least " + MIN_LOGIN_LENGTH + " characters long. Provided login: '" + login + "'.");
+                    "Login must be at least " + MIN_LOGIN_LENGTH
+                            + " characters long. Provided login: '" + login + "'."
+            );
         }
     }
 
@@ -59,7 +51,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if (password.length() < MIN_PASSWORD_LENGTH) {
             throw new RegistrationException(
-                    "Password must be at least " + MIN_PASSWORD_LENGTH + " characters long. Provided length: " + password.length() + ".");
+                    "Password must be at least " + MIN_PASSWORD_LENGTH
+                            + " characters long. Provided length: "
+                            + password.length() + "."
+            );
         }
     }
 
@@ -68,13 +63,18 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("Age cannot be null");
         }
         if (age < MIN_AGE) {
-            throw new RegistrationException("Not valid age: " + age + ". Minimum allowed age is " + MIN_AGE + ".");
+            throw new RegistrationException(
+                    "Not valid age: " + age + ". Minimum allowed age is "
+                            + MIN_AGE + "."
+            );
         }
     }
 
     private void ensureLoginUnique(String login) {
         if (storageDao.get(login) != null) {
-            throw new RegistrationException("User with login '" + login + "' is already registered.");
+            throw new RegistrationException(
+                    "User with login '" + login + "' is already registered."
+            );
         }
     }
 }
