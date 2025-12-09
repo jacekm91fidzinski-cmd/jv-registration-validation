@@ -4,50 +4,77 @@ import core.basesyntax.dao.StorageDao;
 import core.basesyntax.dao.StorageDaoImpl;
 import core.basesyntax.model.User;
 
+/**
+ * Registration service validates user data and registers user using StorageDao.
+ * It throws RegistrationException on invalid data.
+ */
 public class RegistrationServiceImpl implements RegistrationService {
     private static final int MIN_LOGIN_LENGTH = 6;
     private static final int MIN_PASSWORD_LENGTH = 6;
     private static final int MIN_AGE = 18;
 
-    private final StorageDao storageDao = new StorageDaoImpl();
+    private final StorageDao storageDao;
+
+    /**
+     * Default constructor which uses the default StorageDaoImpl.
+     */
+    public RegistrationServiceImpl() {
+        this(new StorageDaoImpl());
+    }
+
+    /**
+     * Constructor with injected storageDao (useful for testing).
+     */
+    public RegistrationServiceImpl(StorageDao storageDao) {
+        this.storageDao = storageDao;
+    }
 
     @Override
     public User register(User user) {
         if (user == null) {
-            throw new RegistrationException("User can't be null");
+            throw new RegistrationException("User cannot be null");
         }
 
-        if (user.getLogin() == null) {
-            throw new RegistrationException("Login can't be null");
-        }
-        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login should be at least "
-                    + MIN_LOGIN_LENGTH + " characters. Actual login: '"
-                    + user.getLogin() + "'");
-        }
-
-        if (user.getPassword() == null) {
-            throw new RegistrationException("Password can't be null");
-        }
-        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password should be at least "
-                    + MIN_PASSWORD_LENGTH + " characters. Actual password length: "
-                    + user.getPassword().length());
-        }
-
-        if (user.getAge() == null) {
-            throw new RegistrationException("Age can't be null");
-        }
-        if (user.getAge() < MIN_AGE) {
-            throw new RegistrationException("Not valid age: " + user.getAge()
-                    + ". Min allowed age is " + MIN_AGE);
-        }
-
-        if (storageDao.get(user.getLogin()) != null) {
-            throw new RegistrationException("User with login '"
-                    + user.getLogin() + "' is already registered");
-        }
+        validateLogin(user.getLogin());
+        validatePassword(user.getPassword());
+        validateAge(user.getAge());
+        ensureLoginUnique(user.getLogin());
 
         return storageDao.add(user);
+    }
+
+    private void validateLogin(String login) {
+        if (login == null) {
+            throw new RegistrationException("Login cannot be null");
+        }
+        if (login.length() < MIN_LOGIN_LENGTH) {
+            throw new RegistrationException(
+                    "Login must be at least " + MIN_LOGIN_LENGTH + " characters long. Provided login: '" + login + "'.");
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (password == null) {
+            throw new RegistrationException("Password cannot be null");
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException(
+                    "Password must be at least " + MIN_PASSWORD_LENGTH + " characters long. Provided length: " + password.length() + ".");
+        }
+    }
+
+    private void validateAge(Integer age) {
+        if (age == null) {
+            throw new RegistrationException("Age cannot be null");
+        }
+        if (age < MIN_AGE) {
+            throw new RegistrationException("Not valid age: " + age + ". Minimum allowed age is " + MIN_AGE + ".");
+        }
+    }
+
+    private void ensureLoginUnique(String login) {
+        if (storageDao.get(login) != null) {
+            throw new RegistrationException("User with login '" + login + "' is already registered.");
+        }
     }
 }
