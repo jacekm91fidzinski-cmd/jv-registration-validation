@@ -14,12 +14,14 @@ public class RegistrationServiceImplTest {
     private RegistrationServiceImpl registrationService;
 
     @BeforeEach
+
     public void setUp() {
-        Storage.people.clear();;
+        Storage.people.clear();
         registrationService = new RegistrationServiceImpl();
     }
 
     @Test
+
     public void register_validUser_ok() {
         User user = new User();
         user.setLogin("validLogin");
@@ -35,12 +37,14 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+
     public void register_nullUser_notOk() {
         assertThrows(RegistrationException.class,
                 () -> registrationService.register(null));
     }
 
     @Test
+
     public void register_nullLogin_notOK() {
         User user = new User();
         user.setLogin(null);
@@ -52,6 +56,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+
     public void register_shortLogin_notOk() {
         User user1 = new User();
         user1.setLogin("");
@@ -82,6 +87,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+
     public void register_nullPassword_notOk() {
         User user = new User();
         user.setLogin("validLogin");
@@ -92,6 +98,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+
     public void  short_password_notOk() {
         User p0 = new User();
         p0.setLogin("login01");
@@ -122,6 +129,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+
     public void register_nullAge_notOk() {
         User user = new User();
         user.setLogin("validLogin");
@@ -131,6 +139,7 @@ public class RegistrationServiceImplTest {
         assertThrows(RegistrationException.class, () -> registrationService.register(user));
     }
     @Test
+
     public void register_underage_notOK() {
         User user17 = new User();
         user17.setLogin("user17");
@@ -148,6 +157,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+
     public void register_ageBoundary18_ok() {
         User user = new User();
         user.setLogin("age18ok");
@@ -160,6 +170,7 @@ public class RegistrationServiceImplTest {
     }
 
     @Test
+
     public void register_existingLogin_notOk() {
         User existing = new User();
         existing.setLogin("duplicate");

@@ -17,35 +17,35 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new RegistrationException("User can't be null");
         }
 
-        String login = user.getLogin();
-        String password = user.getPassword();
-        Integer age = user.getAge();
-
-        if (login == null) {
+        if (user.getLogin() == null) {
             throw new RegistrationException("Login can't be null");
         }
-        if (login.length() < MIN_LOGIN_LENGTH) {
-            throw new RegistrationException("Login should be at least " + MIN_LOGIN_LENGTH
-                    + " characters. Actual login: '" + login + "'");
+        if (user.getLogin().length() < MIN_LOGIN_LENGTH) {
+            throw new RegistrationException("Login should be at least "
+                    + MIN_LOGIN_LENGTH + " characters. Actual login: '"
+                    + user.getLogin() + "'");
         }
-        if (password == null) {
+
+        if (user.getPassword() == null) {
             throw new RegistrationException("Password can't be null");
         }
-        if (password.length() < MIN_PASSWORD_LENGTH) {
-            throw new RegistrationException("Password should be at least " + MIN_PASSWORD_LENGTH
-                    + " characters. Actual password length: "
-                    + password.length());
+        if (user.getPassword().length() < MIN_PASSWORD_LENGTH) {
+            throw new RegistrationException("Password should be at least "
+                    + MIN_PASSWORD_LENGTH + " characters. Actual password length: "
+                    + user.getPassword().length());
         }
-        if (age == null) {
+
+        if (user.getAge() == null) {
             throw new RegistrationException("Age can't be null");
         }
-        if (age < MIN_AGE) {
-            throw new RegistrationException("Not valid age: " + age
+        if (user.getAge() < MIN_AGE) {
+            throw new RegistrationException("Not valid age: " + user.getAge()
                     + ". Min allowed age is " + MIN_AGE);
         }
-        if (storageDao.get(login) != null) {
+
+        if (storageDao.get(user.getLogin()) != null) {
             throw new RegistrationException("User with login '"
-                    + login + "' is already registered");
+                    + user.getLogin() + "' is already registered");
         }
 
         return storageDao.add(user);
